@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sync | Session</title>
+
+        <!--Bootstrap CSS-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+        <!--CSS-->
+        <link rel= "stylesheet" type= "text/css" href= "../static/styles/style.css">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+        <script type="text/javascript" src="../static/js/script.js"></script>
+
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#" class="active">Home</a>
+        <a href="{{ url_for('get_info', sessionname=sessionname) }}">Session Info</a>
+        {% if current_user.name in hosts %}
+        <a href="{{ url_for('end') }}">End Session</a>
+        {% else %}
+        <a href="{{ url_for('exit') }}">Exit Session</a>
+        {% endif %}
+	</div>
+
+	<!-- Menu bars -->
+	<div class="container-left">
+		<div class="menu">
+			<a href="#">
+			<span onclick="openNav()">&equiv;</span>
+			</a>
+		</div>
+    <div id="main">
+        <h1>Now Playing:</h1>
+        <div class="container-center">
+            {% if current_user.name in hosts %}
+            <div class="player">
+                <img src={{context_data['item']['album']['images'][1]['url']}} style="width=:{{context_data['item']['album']['images'][0]['width']}};height:{{context_data['item']['album']['images'][0]['width']}}">
+                <h2>&quot;{{ context_data['item']['name'] }}&quot;</h2>
+                <p><b>{{ context_data['item']['artists'][0]['name']}}</b>
+                <br>{{ context_data['item']['album']['name']}}</p>
+                    <a href=" {{ url_for('play',session = sessionname) }}" class="play">&#9658;</a>
+                    <a href=" {{ url_for('pause',session = sessionname) }}" class="pause"><b>||</b></a>
+            </div>
+            {% else %}
+            <div class="player">
+                <img src={{context_data['item']['album']['images'][1]['url']}} style="width=:{{context_data['item']['album']['images'][0]['width']}};height:{{context_data['item']['album']['images'][0]['width']}}">
+                <h2>&quot;{{ context_data['item']['name'] }}&quot;</h2>
+                <p><b>{{ context_data['item']['artists'][0]['name']}}</b>
+                <br>{{ context_data['item']['album']['name']}}</p>
+
+            </div>
+            {% endif %}
+        </div>
+        {%  if events %}
+           <h2>Some related events:</h2>
+           {% for event in events %}
+               <h4><a href="{{ event[1] }}">{{ event[0] }}</a></h4>
+           {% endfor %}
+       {% endif %}
+    </div>
+    </div>
+</body>
+</html>
